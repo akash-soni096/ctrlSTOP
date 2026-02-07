@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ctrlSTOP Admin</title>
+    <style>
+        body { background: #111; color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        h1 { color: #ff6600; text-align: center; margin-bottom: 40px; }
+        
+        .station-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .station-card {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 15px;
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .station-card.active { border-color: #00cc66; box-shadow: 0 0 15px rgba(0, 204, 102, 0.2); }
+        .station-card.locked { border-color: #ff3333; }
+
+        .status-dot { height: 15px; width: 15px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .dot-green { background: #00cc66; }
+        .dot-red { background: #ff3333; }
+
+        .timer-display { font-size: 3rem; font-family: monospace; margin: 15px 0; font-weight: bold; }
+        
+        .btn-group { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+        
+        button { 
+            padding: 10px 15px; cursor: pointer; border: none; font-weight: bold; border-radius: 5px; color: white;
+        }
+        .btn-add { background: #3399ff; }
+        .btn-add:hover { background: #66b2ff; }
+        
+        .btn-lock { background: #ff3333; }
+        .btn-lock:hover { background: #ff6666; }
+
+        .btn-unlock { background: #00cc66; }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>☕ Cafe Floor Manager</h1>
+    
+    <div class="station-grid" id="grid">
+        </div>
+
+    <script>
+        const socket = io();
+        const stationIds = ['station-1', 'station-2', 'station-3'];
+
+        // 1. GENERATE UI
+        const grid = document.getElementById('grid');
+        stationIds.forEach(id => {
+            const card = document.createElement('div');
+            card.className = 'station-card locked';
+            card.id = `card-${id}`;
+            card.innerHTML = `
+                <h2>🖥️ ${id.toUpperCase()}</h2>
+                <div id="status-${id}"><span class="status-dot dot-red"></span>LOCKED</div>
+                <div class="timer-display" id="timer-${id}">00:00</div>
+                
+                <div class="btn-group">
+                    <button class="btn-add" onclick="addTime('${id}', 60)">+ 1 HR</button>
+                    <button class="btn-add" onclick="addTime('${id}', 30)">+ 30 M</button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-lock" onclick="toggleLock('${id}', 'lock')">🔒 LOCK</button>
+                    <button class="btn-unlock" onclick="toggleLock('${id}', 'unlock')">🔓 OPEN</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        // 2. LISTEN FOR UPDATES
+        socket.on('admin_update', (data) => {
+            // Update statuses (Red/Green dots)
+            for (const [id, info] of Object.entries(data)) {
+                if(!document.getElementById(`card-${id}`)) return;
+                
+                updateCardVisuals(id, info.isLocked, info.timeLeft);
+            }
+        });
+
+        socket.on('admin_timer_tick', (data) => {
+            const el = document.getElementById(`timer-${data.id}`);
+            if(el) el.innerText = formatTime(data.time);
+        });
+
+        // 3. ACTIONS
+        function addTime(id, mins) {
+            socket.emit('request_add_time', { target: id, minutes: mins });
+        }
+
+        function toggleLock(id, action) {
+            socket.emit('request_toggle_lock', { target: id, action: action });
+        }
+
+        // Helpers
+        function formatTime(s) {
+            const m = Math.floor(s / 60).toString().padStart(2,'0');
+            const sec = (s % 60).toString().padStart(2,'0');
+            return `${m}:${sec}`;
+        }
+
+        function updateCardVisuals(id, isLocked, time) {
+            const card = document.getElementById(`card-${id}`);
+            const statusDiv = document.getElementById(`status-${id}`);
+            const timerDiv = document.getElementById(`timer-${id}`);
+
+            if(isLocked) {
+                card.className = 'station-card locked';
+                statusDiv.innerHTML = '<span class="status-dot dot-red"></span>LOCKED';
+            } else {
+                card.className = 'station-card active';
+                statusDiv.innerHTML = '<span class="status-dot dot-green"></span>ACTIVE';
+            }
+            timerDiv.innerText = formatTime(time);
+        }
+    </script>
+</body>
+</html>

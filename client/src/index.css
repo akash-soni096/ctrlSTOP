@@ -1,0 +1,35 @@
+/* App.css */
+body {
+  margin: 0;
+  background-color: #0f0f13; /* Deep dark background */
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden; /* No scrolling allowed */
+  user-select: none; /* Users can't highlight text */
+}
+
+.screen-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #ff4400; /* The ctrlSTOP Orange Brand Color */
+}
+
+.brand-title {
+  font-size: 4rem;
+  font-weight: bold;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 20px #ff4400;
+}
+
+.status-badge {
+  background: #222;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 20px;
+  border: 1px solid #444;
+}

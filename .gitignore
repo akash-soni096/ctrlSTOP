@@ -1,0 +1,16 @@
+# Dependency folders
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build folders
+client/dist/
+client/release-builds/
+
+# Local state/Database
+server/stations.json
+
+# Environment/Logs
+.env
+*.log
+.DS_Store
