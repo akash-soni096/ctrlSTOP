@@ -68,3 +68,11 @@ node index.js
 ## 5.BANDWITH & GAME UPDATE
 
 *  Local PXE Boot / LAN Cache Server - server acts as a local cache . when station 1 upadete a game  the server saves the updates files when station2 needs a update it pull over the fast cached server at 1GBPS, consuming 0 internet bandwith.
+---
+# STACK UPDATE 
+| Component | Current Prototype Stack | Production Target Stack | Why the Change? |
+| :--- | :--- | :--- | :--- |
+| Client Shell (The App) | Electron.js | C++ / C# (.NET Core) | Electron runs an entire Chromium browser instance in the background, consuming 150MB+ of RAM. C++/.NET compiles to native machine code, running at a fraction of the memory footprint (under 20MB) with seamless, unrestricted access to the Windows API for blocking deep keyboard hooks (Ctrl+Alt+Del) and killing tasks instantly |
+| Realtime Network | Socket.io (WebSockets) | gRPC / WebRTC (DataChannels) | Socket.io is excellent for web browsers but can suffer from high connection overhead over unstable local networks. gRPC provides strict protocol buffers, blindingly fast data speeds, multiplexing, and significantly lower network latency across 100+ connected client machines. |
+| Server State | JSON File (fs serialization) | Redis + PostgreSQL | Writing a JSON file on every tick doesn't scale. Redis handles volatile, high-velocity session timers in-memory with sub-millisecond speeds, while PostgreSQL safely handles long-term user balances, transaction history, and shop inventory data. |
+| 
