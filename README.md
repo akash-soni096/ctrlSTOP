@@ -41,25 +41,25 @@ node index.js
 
    * 1. windows shortcuts can still bypass the electron UI the lock screen .Need to use the registry edit(regedit) or a node library to kill the windows shortcuts continiously.
 
-    2. Automated force close - when the timer hits 00:00 the app should forcefuly kill th running game before showing the lock screen .
+   * 2. Automated force close - when the timer hits 00:00 the app should forcefuly kill the running game before showing the lock screen.
 
 ## 2. UI/UX CHANGES
 
    * 1. Floating overlay - Displaying how much time is left on realtime a semi transparent small timer on the top right side corner.
 
-    2. Messages/Announcement - Admin can send a message to the client using the admin panel to show it as a pop-up mesasge in for 3-5 seconds on the client's side.
+   * 2. Messages/Announcement - Admin can send a message to the client using the admin panel to show it as a pop-up mesasge in for 3-5 seconds on the client's side.
 
 ## 3. ADMIN INFRASTRUCTURE 
 
    * 1. Screenshot/Task monitoring - Admin can capture and see the screenshot of a particualr client to see the what's going on the each station.
 
-    2. Remotely controlling - Admin can shutdown , restart , sleep a station on command using the admin panel.
+   * 2. Remotely controlling - Admin can shutdown , restart , sleep a station on command using the admin panel.
 
 ## 4. REVENUE & PAYMENT FEATUERS 
 
    * 1. QR CODE/ Digital Payment integration - When a station is locked, show a dynamic QR Code in the screen user pays it using UPI and and get the time they bought.
 
-    2. PrePaid Ticket/Voucher System - Genrate a list of random 6 digit code in the admin panel (e.g X8Y2Z0 = 2hours) the owner prints it out and the user use it to unmlock a station and the code/voucher expires.
+   * 2. PrePaid Ticket/Voucher System - Genrate a list of random 6 digit code in the admin panel (e.g X8Y2Z0 = 2hours) the owner prints it out and the user use it to unmlock a station and the code/voucher expires.
 
 
 
